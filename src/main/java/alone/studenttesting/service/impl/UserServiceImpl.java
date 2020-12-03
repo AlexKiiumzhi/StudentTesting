@@ -1,7 +1,7 @@
 package alone.studenttesting.service.impl;
 
 import alone.studenttesting.entity.*;
-import alone.studenttesting.exception.UserNotFoundException;
+import alone.studenttesting.exception.*;
 import alone.studenttesting.repository.SubjectRepository;
 import alone.studenttesting.repository.TestRepository;
 import alone.studenttesting.repository.UserRepository;
@@ -10,6 +10,8 @@ import alone.studenttesting.service.dto.RegistrationDto;
 import alone.studenttesting.service.dto.Test.TestDto;
 import alone.studenttesting.service.dto.Test.TestPassingDto;
 import alone.studenttesting.service.dto.Test.TestWithSubjectDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
+    public static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -41,17 +41,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long registerUser(RegistrationDto registrationDto) {
+        log.info("Creating and saving new user to the database using the registrationDto: " + registrationDto.toString());
         if (!userRepository.findByEmail(registrationDto.getEmail()).isPresent()) {
             User newUser = userRepository.save(mapRegistrationDtoToUser(registrationDto));
             return newUser.getId();
         } else {
-            throw new UserNotFoundException("User not found");
+            throw new UserAlreadyExistsException("This email is already taken");
         }
     }
 
     @Override
     public List<TestWithSubjectDto> getAllTestsWithSubjects() {
-
+        log.info("Retrieving all tests with subjects from database: " );
         List<Subject> subjects = subjectRepository.findAll();
         List<TestWithSubjectDto> testWithSubjectDtos = new ArrayList<>();
         for (Subject subject : subjects) {
@@ -64,6 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Test> testSelection(Long id) {
+        log.info("Finding,Selecting a test and saving it into user in the database, test:" + id);
         Optional<User> optionalUser = userRepository.findById(getLoggedInUser().getId());
         Optional<Test> optionalTest = testRepository.findById(id);
         if (optionalTest.isPresent()) {
@@ -76,20 +78,42 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(user);
                 return user.getTests();
             } else {
-                throw new UserNotFoundException("test exists");
+                throw new TestNotFoundException("test not found");
             }
         } else {
-            throw new UserNotFoundException("test not present");
+            throw new TestAlreadyExistsException("this test is already selected");
         }
     }
-   
+
+    @Override
+    public List<Question> testPreparing(Long id) {
+        log.info("Retrieving and Preparing the test and for the user, test:" + id);
+        Optional<User> optionalUser = userRepository.findById(getLoggedInUser().getId());
+        Optional<Test> optionalTest = testRepository.findById(id);
+        LocalDateTime testStartDate = optionalTest.get().getTestDate();
+        LocalDateTime passingTestDate = LocalDateTime.now();
+        if (optionalUser.isPresent()) {
+            if (passingTestDate.isAfter(testStartDate)) {
+                if (optionalTest.isPresent()) {
+                    return optionalTest.get().getQuestions();
+                } else {
+                    throw new TestNotFoundException("Test not found");
+                }
+            } else {
+                throw new TestTimeException("You are early, Please wait for test start time");
+            }
+        } else {
+            throw new UserNotFoundException("User not found");
+        }
+    }
+
     @Override
     public Integer testPassing(TestPassingDto testPassingDto) {
+        log.info("Passing the test,calculating results and saving them in database using testPassingDto:"
+                + testPassingDto.toString());
         User user = getLoggedInUser();
         Optional<Test> optionalTest = testRepository.findById(testPassingDto.getTestId());
         List<List<Long>> studentAnswers = testPassingDto.getAnswerIds();
-        LocalDateTime testStartDate = optionalTest.get().getTestDate();
-        LocalDateTime passingDate = LocalDateTime.now();
 
         Integer correctQuestions = 0;
         List<List<Long>> correctAnswers = new ArrayList<>();
@@ -128,6 +152,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<TestDto> getAllTests(Integer pageNo, Integer pageSize, String sortBy) {
+        log.info("Retrieving all tests from the database with the possibility of sorting and paging, Page number:" + pageNo
+                + "Page size:" + pageSize + "Sort by: " + sortBy);
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
         List<Test> tests = testRepository.findAll(paging).getContent();

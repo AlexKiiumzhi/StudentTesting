@@ -1,5 +1,6 @@
 package alone.studenttesting.service;
 
+import alone.studenttesting.entity.Question;
 import alone.studenttesting.entity.Test;
 import alone.studenttesting.entity.User;
 import alone.studenttesting.service.dto.RegistrationDto;
@@ -16,5 +17,6 @@ public interface UserService  {
     List<Test> testSelection(Long id);
     User getLoggedInUser();
     Integer testPassing(TestPassingDto testPassingDto);
+    List<Question> testPreparing(Long id);
 
 }

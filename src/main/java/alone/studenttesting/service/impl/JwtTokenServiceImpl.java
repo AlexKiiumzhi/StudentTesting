@@ -1,9 +1,12 @@
 package alone.studenttesting.service.impl;
 
+import alone.studenttesting.controller.AdminController;
 import alone.studenttesting.service.JwtTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,8 @@ import java.util.function.Function;
 
 @Service
 public class JwtTokenServiceImpl implements JwtTokenService {
+    public static final Logger log = LoggerFactory.getLogger(JwtTokenServiceImpl.class);
+
     @Value("${jwt.secret}")
     private String secret;
 
@@ -22,6 +27,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public String generateToken(String email) {
+        log.info("Generate a token for a user using email:" + email);
         //TODO change to LocalDate
         final Date createdDate = new Date();
         final Date expirationDate = calculateExpirationDate(createdDate);

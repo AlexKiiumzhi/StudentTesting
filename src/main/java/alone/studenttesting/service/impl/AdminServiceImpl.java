@@ -1,12 +1,17 @@
 package alone.studenttesting.service.impl;
 
 import alone.studenttesting.entity.*;
-import alone.studenttesting.exception.TestNotFoundException;
+import alone.studenttesting.exception.*;
 import alone.studenttesting.repository.*;
 import alone.studenttesting.service.AdminService;
-import alone.studenttesting.service.dto.*;
+import alone.studenttesting.service.dto.AnswerCreationDto;
+import alone.studenttesting.service.dto.QuestionCreationDto;
+import alone.studenttesting.service.dto.QuestionEditDto;
 import alone.studenttesting.service.dto.Test.TestCreationDto;
 import alone.studenttesting.service.dto.Test.TestEditDto;
+import alone.studenttesting.service.dto.UserEditDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,8 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Oleksandr Kiiumzhi
+ * This class is the implementations of all the actions that an admin can perform
+ */
 @Service
 public class AdminServiceImpl implements AdminService {
+
+    public static final Logger log = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     @Autowired
     TestRepository testRepository;
@@ -28,36 +39,45 @@ public class AdminServiceImpl implements AdminService {
     QuestionRepository questionRepository;
     @Autowired
     AnswerRepository answerRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * description
+     * @param id User ID
+     * @return Id of the user that has been blocked
+     */
     @Override
-    public void blockUser(Long id) {
+    public Long blockUser(Long id) {
+        log.info("Block a user by his id and save the changes, id:" + id);
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             User userToBeBlocked = optionalUser.get();
-            userToBeBlocked.setBlocked(true);
+            userToBeBlocked.setBlocked(Boolean.TRUE);
             userRepository.save(userToBeBlocked);
+            return userToBeBlocked.getId();
         }else {
-            throw new TestNotFoundException("Subject not found");
+            throw new UserNotFoundException("User not found");
         }
     }
 
     @Override
-    public void unblockUser(Long id) {
+    public Long unBlockUser(Long id) {
+        log.info("Unblock a user by his id and save the changes, id:" + id);
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
-            User userToBeBlocked = optionalUser.get();
-            userToBeBlocked.setBlocked(false);
-            userRepository.save(userToBeBlocked);
+            User userToBeunBlocked = optionalUser.get();
+            userToBeunBlocked.setBlocked(Boolean.FALSE);
+            userRepository.save(userToBeunBlocked);
+            return userToBeunBlocked.getId();
         }else {
-            throw new TestNotFoundException("Subject not found");
+            throw new UserNotFoundException("User not found");
         }
     }
 
     @Override
     public void createTest(TestCreationDto testCreationDto) {
+        log.info("Create a test and save the changes to the database using TestCreationDto:" + testCreationDto);
         Optional<Subject> optionalSubject = subjectRepository.findById(testCreationDto.getSubjectID());
         if (optionalSubject.isPresent()) {
             if (!testRepository.findByEnName(testCreationDto.getEnName()).isPresent() &&
@@ -67,15 +87,16 @@ public class AdminServiceImpl implements AdminService {
                 subject.getTests().add(newTest);
                 subjectRepository.save(subject);
             } else {
-                throw new TestNotFoundException("Test not found");
+                throw new TestAlreadyExistsException("Test with this name already exists, Please choose another name");
             }
         } else {
-            throw new TestNotFoundException("Test not found");
+            throw new SubjectNotFoundException("Subject not found");
         }
     }
 
     @Override
     public void createQuestion(QuestionCreationDto questionCreationDto) {
+        log.info("Create a question for a test save the changes to the database using QuestionCreationDto:" + questionCreationDto);
         Optional<Test> optionalTest = testRepository.findById(questionCreationDto.getTestId());
         if (optionalTest.isPresent()) {
             if (!questionRepository.findByEnText(questionCreationDto.getEnText()).isPresent()&&
@@ -85,7 +106,7 @@ public class AdminServiceImpl implements AdminService {
                 test.getQuestions().add(newQuestion);
                 testRepository.save(test);
             } else {
-                throw new TestNotFoundException("Test not found");
+                throw new QuestionAlreadyExistsException("Question with this name already exists, Please choose another name");
             }
         } else {
             throw new TestNotFoundException("Test not found");
@@ -94,6 +115,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void createAnswer(AnswerCreationDto answerCreationDto) {
+        log.info("Create a answer for a question and save the changes to the database using AnswerCreationDto:" + answerCreationDto);
         Optional<Question> optionalQuestion = questionRepository.findById(answerCreationDto.getQuestionId());
         if (optionalQuestion.isPresent()) {
             if (!answerRepository.findByEnAnswer(answerCreationDto.getEnAnswer()).isPresent()&&
@@ -103,15 +125,16 @@ public class AdminServiceImpl implements AdminService {
                 question.getAnswers().add(newAnswer);
                 questionRepository.saveAndFlush(question);
             } else {
-                throw new TestNotFoundException("Test not found");
+                throw new AnswerAlreadyExistsException("Answer with this name already exists, Please choose another name");
             }
         } else {
-            throw new TestNotFoundException("Test not found");
+            throw new QuestionNotFoundException("Question not found");
         }
     }
 
     @Override
     public void deleteTest(Long id) {
+        log.info("Delete a test using its id and save the changes in database, id:" + id);
         Optional<Test> optionalTest = testRepository.findById(id);
         if (optionalTest.isPresent()) {
             testRepository.deleteById(id);
@@ -122,6 +145,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void editTest(TestEditDto testEditDto) {
+        log.info("Edit a test and saving the changes in database using TestEditDto:" + testEditDto);
         Optional<Test> optionalTest = testRepository.findById(testEditDto.getId());
         if (optionalTest.isPresent()) {
             testRepository.save(mapTestEditDtoToTest(testEditDto, optionalTest.get()));
@@ -132,6 +156,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void editQuestion(QuestionEditDto questionEditDto) {
+        log.info("Edit a question and its answers, and saving the changes in database using QuestionEditDto:" + questionEditDto);
         Optional<Question> optionalQuestion = questionRepository.findById(questionEditDto.getQuestionId());
         if (optionalQuestion.isPresent()) {
             Question question = mapQuestionEditDtoToQuestion(questionEditDto, optionalQuestion.get());
@@ -141,15 +166,18 @@ public class AdminServiceImpl implements AdminService {
                     questionAnswers.add(answerRepository.findById(id).get());
                 }
                 question.setAnswers(questionAnswers);
+            }else {
+                throw new NoTestProvidedException("There is no answers provided, please include an answer or more!");
             }
             questionRepository.save(question);
         } else {
-            throw new TestNotFoundException("Test not found");
+            throw new QuestionNotFoundException("Question not found");
         }
     }
 
     @Override
     public void editUser(UserEditDto userEditDto) {
+        log.info("Edit user and save the changes in database using UserEditDto:" + userEditDto);
         Optional<User> optionalUser = userRepository.findById(userEditDto.getId());
         if (optionalUser.isPresent()) {
             User user = mapUserEditDtoToUser(userEditDto, optionalUser.get());
@@ -159,10 +187,12 @@ public class AdminServiceImpl implements AdminService {
                     userTests.add(testRepository.findById(id).get());
                 }
                 user.setTests(userTests);
+            }else {
+                throw new NoTestProvidedException("There is no tests provided, please include a test or more!");
             }
             userRepository.save(user);
         } else {
-            throw new TestNotFoundException("Test not found");
+            throw new UserNotFoundException("User not found");
         }
     }
 
@@ -198,6 +228,7 @@ public class AdminServiceImpl implements AdminService {
         answer.setCorrectnessState(answerCreationDto.getCorrectnessState());
         return answer;
     }
+
         private Question mapQuestionEditDtoToQuestion(QuestionEditDto questionEditDto, Question questionInDB) {
         questionInDB.setEnText(questionEditDto.getEnText());
         questionInDB.setUaText(questionEditDto.getUaText());

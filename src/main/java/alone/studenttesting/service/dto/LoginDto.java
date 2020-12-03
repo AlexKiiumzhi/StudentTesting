@@ -1,7 +1,18 @@
 package alone.studenttesting.service.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class LoginDto {
+
+    @NotBlank(message = "Email field blank!")
+    @Email
     public String email;
+    @NotNull(message = "Password field null!")
+    @NotBlank(message = "Password field blank!")
+    @Size(min = 8, max = 30, message = "Password field not in size 8 - 30.")
     public String password;
 
     public String getEmail() {

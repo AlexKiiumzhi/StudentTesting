@@ -1,19 +1,42 @@
 package alone.studenttesting.service.dto;
 
+import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserEditDto {
 
+    @NotNull(message = "user id must not be null")
+    @Min(value=1, message="must be equal or greater than 1")
+    @Max(value=50, message="must be equal or less than 50")
     private Long id;
+    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
+    @NotEmpty(message = "english first name must not be empty")
     private String enFirstName;
+    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
+    @NotEmpty(message = "ukrainian first name must not be empty")
     private String UaFirstname;
+    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
+    @NotEmpty(message = "english last name must not be empty")
     private String EnLastname;
+    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
+    @NotEmpty(message = "ukrainian last name must not be empty")
     private String UaLastName;
+    @NotBlank(message = "Email field blank!")
+    @Email
     private String email;
+    @Pattern(regexp="^\\\\+?3?8?(0(67|68|95|96|97|98)\\\\d{7})$",message="number must be a format of +XX0XXXXXXXXX")
+    @NotEmpty(message = "ukrainian last name must not be empty")
     private String phone;
+    @NotNull(message = "Password field null!")
+    @NotBlank(message = "Password field blank!")
+    @Size(min = 8, max = 30, message = "Password field not in size 8 - 30.")
     private String password;
+    @NotNull(message = "age must not be null")
+    @Min(value=5, message="must be equal or greater than 1")
+    @Max(value=70, message="must be equal or less than 50")
     private Long age;
-    private List<Long> testIds;
+    private List<Long> testIds = new ArrayList<>();
 
     public Long getId() {
         return id;

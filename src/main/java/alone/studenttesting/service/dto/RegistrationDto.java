@@ -1,14 +1,34 @@
 package alone.studenttesting.service.dto;
 
+import javax.validation.constraints.*;
+
 public class RegistrationDto {
 
+    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
+    @NotEmpty(message = "english first name must not be empty")
     private String enFirstName;
+    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
+    @NotEmpty(message = "ukrainian first name must not be empty")
     private String uaFirstName;
+    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
+    @NotEmpty(message = "english last name must not be empty")
     private String enLastName;
+    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
+    @NotEmpty(message = "ukrainian last name must not be empty")
     private String uaLastName;
+    @NotBlank(message = "Email field blank!")
+    @Email
     private String email;
+    @NotBlank
+    @NotEmpty(message = "number must be a format of +XX0XXXXXXXXX")
     private String phone;
+    @NotNull(message = "Password field null!")
+    @NotBlank(message = "Password field blank!")
+    @Size(min = 8, max = 30, message = "Password field not in size 8 - 30.")
     private String password;
+    @NotNull(message = "age must not be null")
+    @Min(value=5, message="must be equal or greater than 1")
+    @Max(value=70, message="must be equal or less than 50")
     private Long age;
 
     public String getEnFirstName() {

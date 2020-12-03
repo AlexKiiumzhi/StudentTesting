@@ -1,6 +1,7 @@
 package alone.studenttesting.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +23,7 @@ public class Question implements IEntity{
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="question_id")
-    private List<Answer> answers;
+    private List<Answer> answers = new ArrayList<>();
 
     @Override
     public Long getId() { return id; }

@@ -1,6 +1,7 @@
 package alone.studenttesting.security;
 
 import alone.studenttesting.entity.User;
+import alone.studenttesting.exception.TokenValidationException;
 import alone.studenttesting.repository.UserRepository;
 import alone.studenttesting.service.JwtTokenService;
 import io.jsonwebtoken.JwtException;
@@ -42,13 +43,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
                 JwtAuthenticationProfile profile = jwtService.validateToken(token)
                         .map(aBoolean -> new JwtAuthenticationProfile(optionalUser.get()))
-                        //TODO create and replace with JwtTokenException
-                        .orElseThrow(() -> new RuntimeException("JWT Token validation failed"));
+                        .orElseThrow(() -> new TokenValidationException("Token validation failed"));
                 SecurityContextHolder.getContext().setAuthentication(profile);
 
             } catch (JwtException ex) {
-                //TODO repalce with JwtTokenException
-                throw new RuntimeException("Failed to verify token");
+                throw new TokenValidationException("Failed to verify token");
             }
         }
         chain.doFilter(request, response);

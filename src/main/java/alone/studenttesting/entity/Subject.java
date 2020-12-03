@@ -20,7 +20,7 @@ public class Subject implements IEntity{
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="subject_id")
-    private List<Test> tests;
+    private List<Test> tests = new ArrayList<>();
 
     @Override
     public Long getId() {

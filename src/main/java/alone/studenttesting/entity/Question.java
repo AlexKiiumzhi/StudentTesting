@@ -21,7 +21,7 @@ public class Question implements IEntity{
     @Column
     private Boolean pass;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="question_id")
     private List<Answer> answers = new ArrayList<>();
 

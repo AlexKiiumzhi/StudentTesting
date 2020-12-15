@@ -28,7 +28,6 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     @Override
     public String generateToken(String email) {
         log.info("Generate a token for a user using email:" + email);
-        //TODO change to LocalDate
         final Date createdDate = new Date();
         final Date expirationDate = calculateExpirationDate(createdDate);
 

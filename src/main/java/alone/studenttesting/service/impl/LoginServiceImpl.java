@@ -29,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
         return userRepository.findByEmail(email)
                 .filter(user -> password.equals(user.getPassword()))
                 //Only use passwordEncoder when creating a new user and then editing
-               /* .filter(user -> passwordEncoder.matches(password, user.getPassword()))*/
+                /*.filter(user -> passwordEncoder.matches(password, user.getPassword()))*/
                 .map(user -> new JwtTokenResponse(jwtTokenService.generateToken(email)))
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Test Create Page</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"/>
+
+<form action="#" th:action="@{/admin/test/create}" method="post" th:object="${testCreationDto}">
+
+    <label>Subject id:</label>
+    <input type="text" th:field="*{subjectID}" /><br/>
+
+    <label>English name:</label>
+    <input type="text" th:field="*{enName}" /><br/>
+
+    <label>Ukrainian name:</label>
+    <input type="text" th:field="*{uaName}" /><br/>
+
+    <label>Difficulty:</label>
+    <input type="text" th:field="*{difficulty}" /><br/>
+
+    <label>Number of questions:</label>
+    <input type="text" th:field="*{questionAmount}" /><br/>
+
+    <label>Date of test:</label>
+    <input type="text" th:field="*{testDate}" /><br/>
+
+    <button type="submit">Create test</button>
+</form>
+</body>
+</html>

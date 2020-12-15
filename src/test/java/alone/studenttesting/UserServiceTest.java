@@ -180,65 +180,6 @@ public class UserServiceTest {
             assertEquals(passingTestDate.isAfter(TestStartDate), Boolean.TRUE);
     }
 
-    /*@Test
-    public void testPreparing_shall_select_a_test(){
-        // given
-
-        alone.studenttesting.entity.Test test = new alone.studenttesting.entity.Test();
-        test.setId(1L);
-        test.setEnName("Mathemati 11");
-        test.setUaName("Математ 11");
-        test.setDifficulty(6L);
-        test.setQuestionAmount(11);
-
-        Answer answer1 = new Answer();
-        answer1.setId(1L);
-        answer1.setUaAnswer("answer 11");
-        answer1.setEnAnswer("відповідь 11");
-        Answer answer2 = new Answer();
-        answer1.setId(2L);
-        answer1.setUaAnswer("answer 22");
-        answer1.setEnAnswer("відповідь 22");
-
-        List <Long> answerIds = new ArrayList<>();
-        answerIds.add(1L);
-        List <Long> answerIds2 = new ArrayList<>();
-        answerIds.add(2L);
-
-        List<List<Long>> answerIds3 = new ArrayList<>();
-        answerIds3.add(answerIds);
-        answerIds3.add(answerIds2);
-
-        TestPassingDto testPassingDto = new TestPassingDto();
-        testPassingDto.setTestId(1L);
-        testPassingDto.setAnswerIds(answerIds3);
-
-        List<alone.studenttesting.entity.Test> tests = new ArrayList<>();
-        tests.add(test);
-
-        User user = new User();
-        user.setId(1L);
-        user.setEmail("alex1234@gmail.com");
-        user.setPassword("alex2343");
-        user.setTests(tests);
-
-        int Mark = 0;
-
-        mockSecurityContext();
-        when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(user);
-        when(testRepository.findById(anyLong())).thenReturn(Optional.of(test));
-        when(userRepository.setMark(Mark, user.getId(), testPassingDto.getTestId())).thenReturn(Optional.of(test));
-
-        // when
-        userService.testPassing(testPassingDto);
-
-
-        // then
-        assertEquals(passingTestDate.isAfter(TestStartDate), Boolean.TRUE);
-    }*/
-
-
-
     private void assertSubject(TestWithSubjectDto testWithSubjectDto,Subject subject){
         assertEquals(testWithSubjectDto.getEnNameSubject(),subject.getEnFirstName());
         assertEquals(testWithSubjectDto.getUaNameSubject(), subject.getUaFirstName());

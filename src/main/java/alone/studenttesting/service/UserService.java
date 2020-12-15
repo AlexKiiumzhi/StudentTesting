@@ -11,6 +11,7 @@ import alone.studenttesting.service.dto.Test.TestWithSubjectDto;
 import java.util.List;
 
 public interface UserService  {
+    String getUserRole(String email);
     List<TestDto> getAllTests(Integer pageNo, Integer pageSize, String sortBy);
     Long registerUser(RegistrationDto registrationDto);
     List<TestWithSubjectDto> getAllTestsWithSubjects();

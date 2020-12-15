@@ -10,6 +10,7 @@ import alone.studenttesting.service.dto.RegistrationDto;
 import alone.studenttesting.service.dto.Test.TestDto;
 import alone.studenttesting.service.dto.Test.TestPassingDto;
 import alone.studenttesting.service.dto.Test.TestWithSubjectDto;
+import jdk.nashorn.internal.runtime.options.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,6 +43,17 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
+    public String getUserRole(String email) {
+        Optional <User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            return userOptional.get().getRole().name();
+        } else {
+            throw new UserAlreadyExistsException("This email is already taken");
+        }
+    }
+
+    @Override
+    @Transactional
     public Long registerUser(RegistrationDto registrationDto) {
         log.info("Creating and saving new user to the database using the registrationDto: " + registrationDto.toString());
         if (!userRepository.findByEmail(registrationDto.getEmail()).isPresent()) {
@@ -51,6 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<TestWithSubjectDto> getAllTestsWithSubjects() {
         log.info("Retrieving all tests with subjects from database: " );
         List<Subject> subjects = subjectRepository.findAll();
@@ -64,28 +79,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<Test> testSelection(Long id) {
         log.info("Finding,Selecting a test and saving it into user in the database, test:" + id);
         Optional<User> optionalUser = userRepository.findById(getLoggedInUser().getId());
         Optional<Test> optionalTest = testRepository.findById(id);
         if (optionalTest.isPresent()) {
-            User user = optionalUser.get();
-            List<Long> testIds = user.getTests().stream()
-                    .map(Test::getId)
-                    .collect(Collectors.toList());
-            if (!testIds.contains(id)) {
-                user.getTests().add(optionalTest.get());
-                userRepository.save(user);
-                return user.getTests();
+            if (!optionalUser.get().getBlocked()) {
+                User user = optionalUser.get();
+                List<Long> testIds = user.getTests().stream()
+                        .map(Test::getId)
+                        .collect(Collectors.toList());
+                if (!testIds.contains(id)) {
+                    user.getTests().add(optionalTest.get());
+                    userRepository.save(user);
+                    return user.getTests();
+                } else {
+                    throw new TestAlreadyExistsException("this test is already selected");
+                }
             } else {
+                throw new UserIsBlockedException("This user is blocked ");
+            }
+        } else{
                 throw new TestNotFoundException("test not found");
             }
-        } else {
-            throw new TestAlreadyExistsException("this test is already selected");
         }
-    }
+
 
     @Override
+    @Transactional
     public List<Question> testPreparing(Long id) {
         log.info("Retrieving and Preparing the test and for the user, test:" + id);
         Optional<User> optionalUser = userRepository.findById(getLoggedInUser().getId());
@@ -93,6 +115,7 @@ public class UserServiceImpl implements UserService {
         LocalDateTime testStartDate = optionalTest.get().getTestDate();
         LocalDateTime passingTestDate = LocalDateTime.now();
         if (optionalUser.isPresent()) {
+            if (!optionalUser.get().getBlocked()) {
             if (passingTestDate.isAfter(testStartDate)) {
                 if (optionalTest.isPresent()) {
                     return optionalTest.get().getQuestions();
@@ -102,19 +125,23 @@ public class UserServiceImpl implements UserService {
             } else {
                 throw new TestTimeException("You are early, Please wait for test start time");
             }
+            } else {
+                throw new UserIsBlockedException("This user is blocked ");
+            }
         } else {
             throw new UserNotFoundException("User not found");
         }
     }
 
     @Override
+    @Transactional
     public Integer testPassing(TestPassingDto testPassingDto) {
         log.info("Passing the test,calculating results and saving them in database using testPassingDto:"
                 + testPassingDto.toString());
         User user = getLoggedInUser();
         Optional<Test> optionalTest = testRepository.findById(testPassingDto.getTestId());
         List<List<Long>> studentAnswers = testPassingDto.getAnswerIds();
-
+        if (!user.getBlocked()) {
         Integer correctQuestions = 0;
         List<List<Long>> correctAnswers = new ArrayList<>();
         for (Question question : optionalTest.get().getQuestions()){
@@ -122,7 +149,7 @@ public class UserServiceImpl implements UserService {
             Long answerOrder = 0L;
             for (Answer answer : question.getAnswers()){
                 ++ answerOrder;
-                if (answer.getCorrectnessState() == true){
+                if (answer.getCorrectnessState()){
                     answers.add(answerOrder);
                 }
             }
@@ -143,6 +170,9 @@ public class UserServiceImpl implements UserService {
         int mark = correctQuestions * 100 / optionalTest.get().getQuestionAmount();
         userRepository.setMark(mark, user.getId(), testPassingDto.getTestId());
         return mark;
+        } else {
+            throw new UserIsBlockedException("This user is blocked ");
+        }
     }
 
     @Override
@@ -151,6 +181,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<TestDto> getAllTests(Integer pageNo, Integer pageSize, String sortBy) {
         log.info("Retrieving all tests from the database with the possibility of sorting and paging, Page number:" + pageNo
                 + "Page size:" + pageSize + "Sort by: " + sortBy);

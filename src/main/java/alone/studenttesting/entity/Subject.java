@@ -18,7 +18,7 @@ public class Subject implements IEntity{
     @Column(name = "name_ua", nullable = false)
     private String uaFirstName;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name="subject_id")
     private List<Test> tests = new ArrayList<>();
 

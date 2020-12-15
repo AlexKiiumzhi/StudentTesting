@@ -29,9 +29,13 @@ public class TestEditDto {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime testDate;
 
-    public Long getId() { return testId; }
+    public Long getTestId() {
+        return testId;
+    }
 
-    public void setId(Long id) { this.testId = id; }
+    public void setTestId(Long testId) {
+        this.testId = testId;
+    }
 
     public String getEnName() {
         return enName;

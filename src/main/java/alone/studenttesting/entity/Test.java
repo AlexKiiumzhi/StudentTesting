@@ -30,7 +30,7 @@ public class Test implements IEntity {
     @Column(name = "test_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime testDate;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="test_id")
     private List<Question> questions = new ArrayList<>();
 

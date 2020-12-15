@@ -55,16 +55,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(NoTestProvidedException.class)
-    public ResponseEntity<String> handleNoTestProvidedException(NoTestProvidedException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(NoAnswerProvidedException.class)
-    public ResponseEntity<String> handleNoAnswerProvidedException(NoAnswerProvidedException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(TestTimeException.class)
     public ResponseEntity<String> handleTestTimeException(TestTimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
@@ -73,5 +63,10 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TokenValidationException.class)
     public ResponseEntity<String> handleTokenValidationException(TokenValidationException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserIsBlockedException.class)
+    public ResponseEntity<String> handleUserIsBlockedException(UserIsBlockedException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

@@ -9,8 +9,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -29,11 +36,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
+                .authorizeRequests(auth -> {
+                    try {
+                        auth.antMatchers("/home/**", "/login", "/authenticate","/signout" ).permitAll()
+                                .antMatchers("/admin/**","/user/**").permitAll()
+                                .antMatchers( "/home/**").permitAll()
+                                .and().formLogin()
+                                .loginPage("/login")
+                                .failureUrl("")
+                                .permitAll()
+                                .and()
+                                .logout()
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/signout"))
+                                .logoutSuccessUrl("/login");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
+
 
         httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
         httpSecurity.headers().cacheControl();

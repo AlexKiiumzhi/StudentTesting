@@ -15,22 +15,22 @@ public class UserEditDto {
     private String enFirstName;
     @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
     @NotEmpty(message = "ukrainian first name must not be empty")
-    private String UaFirstname;
+    private String uaFirstName;
     @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
     @NotEmpty(message = "english last name must not be empty")
-    private String EnLastname;
+    private String enLastName;
     @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
     @NotEmpty(message = "ukrainian last name must not be empty")
     private String UaLastName;
     @NotBlank(message = "Email field blank!")
     @Email
     private String email;
-    @Pattern(regexp="^\\\\+?3?8?(0(67|68|95|96|97|98)\\\\d{7})$",message="number must be a format of +XX0XXXXXXXXX")
-    @NotEmpty(message = "ukrainian last name must not be empty")
+    /*@Pattern(regexp="^\\\\+?3?8?(0(67|68|95|96|97|98)\\\\d{7})$",message="number must be a format of +XX0XXXXXXXXX")
+    @NotEmpty(message = "ukrainian last name must not be empty")*/
     private String phone;
-    @NotNull(message = "Password field null!")
+    /*@NotNull(message = "Password field null!")
     @NotBlank(message = "Password field blank!")
-    @Size(min = 8, max = 30, message = "Password field not in size 8 - 30.")
+    @Size(min = 8, max = 30, message = "Password field not in size 8 - 30.")*/
     private String password;
     @NotNull(message = "age must not be null")
     @Min(value=5, message="must be equal or greater than 1")
@@ -54,20 +54,20 @@ public class UserEditDto {
         this.enFirstName = enFirstName;
     }
 
-    public String getUaFirstname() {
-        return UaFirstname;
+    public String getUaFirstName() {
+        return uaFirstName;
     }
 
-    public void setUaFirstname(String uaFirstname) {
-        this.UaFirstname = uaFirstname;
+    public void setUaFirstName(String uaFirstName) {
+        this.uaFirstName = uaFirstName;
     }
 
-    public String getEnLastname() {
-        return EnLastname;
+    public String getEnLastName() {
+        return enLastName;
     }
 
-    public void setEnLastname(String enLastname) {
-        this.EnLastname = enLastname;
+    public void setEnLastName(String enLastName) {
+        this.enLastName = enLastName;
     }
 
     public String getLastName_ua() {

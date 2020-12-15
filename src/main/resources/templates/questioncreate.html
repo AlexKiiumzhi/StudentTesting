@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Question Create Page</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"/>
+
+<form action="#" th:action="@{/admin/question/create}" method="post" th:object="${questionCreationDto}">
+
+    <label>Test id:</label>
+    <input type="text" th:field="*{testId}" /><br/>
+
+    <label>English description:</label>
+    <input type="text" th:field="*{enText}" /><br/>
+
+    <label>Ukrainian description:</label>
+    <input type="text" th:field="*{uaText}" /><br/>
+
+    <button type="submit">Create question</button>
+</form>
+</body>
+</html>

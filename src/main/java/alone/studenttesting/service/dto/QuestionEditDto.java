@@ -1,6 +1,7 @@
 package alone.studenttesting.service.dto;
 
 import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionEditDto {
@@ -15,7 +16,7 @@ public class QuestionEditDto {
     @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
     @NotEmpty(message = "ukrainian question name must not be empty")
     private String uaText;
-    private List<Long> answerIds;
+    private List<Long> answerIds ;
 
     public Long getQuestionId() {
         return questionId;

@@ -32,7 +32,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         final String requestHeader = request.getHeader(tokenHeader);
-
         if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
             String authToken = requestHeader.substring(7);
             JwtAuthentication authentication = new JwtAuthentication(authToken);

@@ -193,7 +193,7 @@ public class AdminServiceTest {
         // given
 
         TestEditDto expectedDto = new TestEditDto();
-        expectedDto.setId(1L);
+        expectedDto.setTestId(1L);
         expectedDto.setEnName("Mathematics 1");
         expectedDto.setUaName("Математика 1");
         expectedDto.setDifficulty(7L);
@@ -310,7 +310,7 @@ public class AdminServiceTest {
     }
 
     private void assertEditTest(alone.studenttesting.entity.Test test, TestEditDto expectedDto){
-        assertEquals(test.getId(), expectedDto.getId());
+        assertEquals(test.getId(), expectedDto.getTestId());
         assertEquals(test.getEnName(), expectedDto.getEnName());
         assertEquals(test.getUaName(), expectedDto.getUaName());
         assertEquals(test.getDifficulty(), expectedDto.getDifficulty());

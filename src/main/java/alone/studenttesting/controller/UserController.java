@@ -5,6 +5,7 @@ import alone.studenttesting.entity.Test;
 import alone.studenttesting.service.UserService;
 import alone.studenttesting.service.dto.RegistrationDto;
 import alone.studenttesting.service.dto.Test.TestDto;
+import alone.studenttesting.service.dto.Test.TestEditDto;
 import alone.studenttesting.service.dto.Test.TestPassingDto;
 import alone.studenttesting.service.dto.Test.TestWithSubjectDto;
 import org.slf4j.Logger;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,7 +23,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/user")
 public class UserController {
 
@@ -28,13 +31,20 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/registration")
-    public ResponseEntity<Long> registerUser(@Valid  @RequestBody RegistrationDto registrationDto) {
-        log.info("Creating new user using Registration Dto:" + registrationDto.toString());
-        return ResponseEntity.ok()
-                .body(userService.registerUser(registrationDto));
+    @GetMapping("/registrationPage")
+    public String testPage(Model model) {
+        model.addAttribute("registrationDto", new RegistrationDto());
+        return "registration";
     }
 
+    @PostMapping("/register")
+    public String registerUser(@Valid  @ModelAttribute("registrationDto") RegistrationDto registrationDto) {
+        log.info("Creating new user using Registration Dto:" + registrationDto.toString());
+        userService.registerUser(registrationDto);
+        return "home";
+    }
+
+    @ResponseBody
     @GetMapping("/test/allwithsubjects")
     public ResponseEntity<List<TestWithSubjectDto>> getAllTestsWithSubjects() {
         log.info("Retrieving all tests with subjects: " );
@@ -42,18 +52,20 @@ public class UserController {
                 .body(userService.getAllTestsWithSubjects());
     }
 
-    @PutMapping("/test/select/{id}")
-    public ResponseEntity<List<Test>> testSelection(@PathVariable("id")@NotBlank @Size(min = 1, max = 50) Long id) {
+    @PostMapping("/test/select")
+    public String testSelection(@RequestParam(value = "id", required = false) @NotBlank @Size(min = 1, max = 50) Long id, Model model) {
         log.info("Selecting a test and saving it in user, test:" + id);
-        return ResponseEntity.ok()
-                .body(userService.testSelection(id));
+        userService.testSelection(id);
+        model.addAttribute("id", id);
+        return "user";
     }
 
-    @GetMapping("/test/preparing/{id}")
-    public ResponseEntity<List<Question>> testPreparing(@PathVariable("id")@NotBlank @Size(min = 1, max = 50) Long id) {
+    @GetMapping("/test/preparing")
+    public String testPreparing(@RequestParam(value = "id", required = false) @NotBlank @Size(min = 1, max = 50) Long id,  Model model) {
         log.info("Retrieving and Preparing the test and for the user, test:" + id);
-        return ResponseEntity.ok()
-                .body(userService.testPreparing(id));
+        userService.testPreparing(id);
+        model.addAttribute("id", id);
+        return "user";
     }
 
     @PostMapping("/test/passing")

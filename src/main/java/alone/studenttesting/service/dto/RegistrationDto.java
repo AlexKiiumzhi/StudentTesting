@@ -19,16 +19,18 @@ public class RegistrationDto {
     @NotBlank(message = "Email field blank!")
     @Email
     private String email;
-    @NotBlank
-    @NotEmpty(message = "number must be a format of +XX0XXXXXXXXX")
+    /*@NotBlank
+    @Pattern(regexp="[0-9]{8,30}")
+    @NotEmpty(message = "number must be a format of +XX0XXXXXXXXX")*/
     private String phone;
-    @NotNull(message = "Password field null!")
+    /*@NotNull(message = "Password field null!")
     @NotBlank(message = "Password field blank!")
-    @Size(min = 8, max = 30, message = "Password field not in size 8 - 30.")
+    @Pattern(regexp="[A-Z0-9a-z]{8,30}")
+    @Size(min = 8, max = 30, message = "Password field not in size 8 - 30.")*/
     private String password;
     @NotNull(message = "age must not be null")
     @Min(value=5, message="must be equal or greater than 1")
-    @Max(value=70, message="must be equal or less than 50")
+    @Max(value=70, message="must be equal or less than 70")
     private Long age;
 
     public String getEnFirstName() {

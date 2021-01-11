@@ -19,7 +19,7 @@
     <label for="subjectId" ><fmt:message key="test.subject_id"/></label><br>
     <input type="number" min="1" id="subjectId" name="subjectId" placeholder="id number"><br><br>
     <label for="enName"><fmt:message key="test.en_name"/></label><br>
-    <input type="text" id="enName" name="enName" placeholder="YYYY-MM-DD hh:mm:ss"><br><br>
+    <input type="text" id="enName" name="enName"><br><br>
     <label for="uaName"><fmt:message key="test.ua_name"/></label><br>
     <input type="text" id="uaName" name="uaName"><br><br>
     <label for="difficulty"><fmt:message key="test.difficulty"/></label><br>

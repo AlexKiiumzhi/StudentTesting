@@ -46,7 +46,7 @@ public class MainController {
             return "validationerror";
         }
         userService.registerUser(registrationDto);
-        return "home";
+        return "login";
     }
 
     @GetMapping("/testPage")

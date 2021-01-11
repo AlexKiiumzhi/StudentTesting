@@ -1,11 +1,9 @@
 package alone.studenttesting;
 
-import alone.studenttesting.entity.Subject;
 import alone.studenttesting.entity.User;
-
-import alone.studenttesting.repository.*;
-import alone.studenttesting.service.dto.*;
-import alone.studenttesting.service.dto.Test.TestWithSubjectDto;
+import alone.studenttesting.repository.SubjectRepository;
+import alone.studenttesting.repository.TestRepository;
+import alone.studenttesting.repository.UserRepository;
 import alone.studenttesting.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,10 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class UserServiceTest {

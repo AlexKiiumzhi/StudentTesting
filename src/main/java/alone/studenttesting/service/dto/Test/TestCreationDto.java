@@ -3,7 +3,6 @@ package alone.studenttesting.service.dto.Test;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
-import java.time.LocalDateTime;
 
 public class TestCreationDto {
 

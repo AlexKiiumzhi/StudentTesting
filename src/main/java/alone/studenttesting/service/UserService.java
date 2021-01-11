@@ -4,7 +4,9 @@ import alone.studenttesting.entity.Question;
 import alone.studenttesting.entity.Subject;
 import alone.studenttesting.entity.User;
 import alone.studenttesting.service.dto.RegistrationDto;
-import alone.studenttesting.service.dto.Test.*;
+import alone.studenttesting.service.dto.Test.TestPassingDto;
+import alone.studenttesting.service.dto.Test.TestWithSubjectDto;
+import alone.studenttesting.service.dto.Test.TestsWithSubjectDto;
 import alone.studenttesting.service.dto.TestWithResultsDto;
 import alone.studenttesting.service.dto.UserInfoDto;
 

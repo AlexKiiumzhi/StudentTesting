@@ -1,10 +1,5 @@
 package alone.studenttesting.service.dto.Test;
 
-import alone.studenttesting.entity.Answer;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class TestPassingDto {

@@ -1,7 +1,9 @@
 package alone.studenttesting.service.dto;
 
-import javax.validation.constraints.*;
-import java.util.ArrayList;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class QuestionEditDto {

@@ -1,7 +1,5 @@
 package alone.studenttesting.service.dto.Test;
 
-import javax.validation.constraints.*;
-
 public class TestWithSubjectDto {
 
     private String enNameTest;

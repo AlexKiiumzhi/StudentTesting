@@ -1,11 +1,8 @@
 package alone.studenttesting.service.dto.Test;
 
-import alone.studenttesting.entity.Question;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class TestEditDto {
     @NotNull

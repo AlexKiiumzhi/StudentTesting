@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +31,10 @@ public class Test implements IEntity {
     @Column(name = "test_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime testDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="test_id")
     private List<Question> questions = new ArrayList<>();
+
 
     @Override
     public Long getId() {

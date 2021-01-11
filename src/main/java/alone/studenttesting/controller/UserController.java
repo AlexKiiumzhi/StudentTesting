@@ -1,27 +1,25 @@
 package alone.studenttesting.controller;
 
+
 import alone.studenttesting.entity.Question;
-import alone.studenttesting.entity.Test;
+import alone.studenttesting.entity.Subject;
 import alone.studenttesting.service.UserService;
-import alone.studenttesting.service.dto.RegistrationDto;
-import alone.studenttesting.service.dto.Test.TestDto;
-import alone.studenttesting.service.dto.Test.TestEditDto;
-import alone.studenttesting.service.dto.Test.TestPassingDto;
-import alone.studenttesting.service.dto.Test.TestWithSubjectDto;
+import alone.studenttesting.service.dto.Test.*;
+import alone.studenttesting.service.dto.TestWithResultsDto;
+import alone.studenttesting.service.dto.UserInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/user")
@@ -31,59 +29,102 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/registrationPage")
+    @GetMapping("/home")
+    public String home(Model model) {
+        UserInfoDto userInfoDto = userService.getUserRegistrationInfo();
+        model.addAttribute("userInfoDto", userInfoDto);
+        List<TestWithResultsDto> testsWithResultsDtos = userService.getUserTests();
+        model.addAttribute("testsWithResultsDtos", testsWithResultsDtos);
+        return "userhome";
+    }
+
+    @GetMapping("/testPage")
     public String testPage(Model model) {
-        model.addAttribute("registrationDto", new RegistrationDto());
-        return "registration";
+        List<Subject> subjects = userService.getAllSubjects();
+        model.addAttribute("subjects", subjects);
+        return "usertests";
     }
 
-    @PostMapping("/register")
-    public String registerUser(@Valid  @ModelAttribute("registrationDto") RegistrationDto registrationDto) {
-        log.info("Creating new user using Registration Dto:" + registrationDto.toString());
-        userService.registerUser(registrationDto);
-        return "home";
-    }
-
-    @ResponseBody
-    @GetMapping("/test/allwithsubjects")
-    public ResponseEntity<List<TestWithSubjectDto>> getAllTestsWithSubjects() {
+    @GetMapping("/test/searchBySubject")
+    public String searchBySubject(@RequestParam(value = "searchedSubject") Long subjectId, Model model, BindingResult bindingResult) {
         log.info("Retrieving all tests with subjects: " );
-        return ResponseEntity.ok()
-                .body(userService.getAllTestsWithSubjects());
-    }
-
-    @PostMapping("/test/select")
-    public String testSelection(@RequestParam(value = "id", required = false) @NotBlank @Size(min = 1, max = 50) Long id, Model model) {
-        log.info("Selecting a test and saving it in user, test:" + id);
-        userService.testSelection(id);
-        model.addAttribute("id", id);
-        return "user";
-    }
-
-    @GetMapping("/test/preparing")
-    public String testPreparing(@RequestParam(value = "id", required = false) @NotBlank @Size(min = 1, max = 50) Long id,  Model model) {
-        log.info("Retrieving and Preparing the test and for the user, test:" + id);
-        userService.testPreparing(id);
-        model.addAttribute("id", id);
-        return "user";
-    }
-
-    @PostMapping("/test/passing")
-    public ResponseEntity<Integer> testPassing(@Valid @RequestBody TestPassingDto testPassingDto) {
-        log.info("Passing the test and retrieving results using testPassingDto:" + testPassingDto.toString());
-        return ResponseEntity.ok()
-                .body(userService.testPassing(testPassingDto));
+        if (bindingResult.hasErrors()) {
+            return "validationerror";
+        }
+        List<Subject> subjects = userService.getAllSubjects();
+        model.addAttribute("subjects", subjects);
+        List<TestWithSubjectDto> testWithSubjectDtos = userService.searchBySubject(subjectId);
+        model.addAttribute("testWithSubjectDtos", testWithSubjectDtos);
+        return "usertests";
     }
 
     @GetMapping("/test/all")
-    public ResponseEntity<List<TestDto>> getAllTests(
+    public String getAllTests(
             @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy) {
+            @RequestParam(defaultValue = "3") Integer pageSize,
+            @RequestParam(defaultValue = "enName") String sortBy, Model model) {
         log.info("Retrieving all tests with the possibility of sorting and paging, Page number:" + pageNo
                 + "Page size:" + pageSize + "Sort by: " + sortBy);
-        List<TestDto> list = userService.getAllTests(pageNo, pageSize, sortBy);
+        List<Subject> subjects = userService.getAllSubjects();
+        model.addAttribute("subjects", subjects);
+        TestsWithSubjectDto testsWithSubjectDto = userService.getAllTests(pageNo, pageSize, sortBy);
+        model.addAttribute("testsWithSubjectDto", testsWithSubjectDto);
+        model.addAttribute("pageNumber", pageNo);
 
-        return new ResponseEntity<>(list, new HttpHeaders(), HttpStatus.OK);
+        return "usertests";
+    }
+
+    @GetMapping("/testPassingPage")
+    public String testPassingPage() {
+        return "usertestpassingpage";
+    }
+
+    @PostMapping("/testPassingPage/select")
+    public String testSelection(@RequestParam(value = "id", required = false) @NotNull @Min(value=1) Long id, Model model, BindingResult bindingResult) {
+        log.info("Selecting a test and saving it in user, test:" + id);
+        if (bindingResult.hasErrors()) {
+            return "validationerror";
+        }
+        List<Question> questions = userService.testSelection(id);
+        model.addAttribute("id", id);
+        model.addAttribute("questions", questions);
+        return "usertestpassingpage";
+    }
+
+    @PostMapping("/testPassingPage/pass")
+    public String testPassing(@RequestParam(value = "id1", required = false) @NotNull @Min(value=1) Long id, Model model, BindingResult bindingResult) {
+        log.info("Passing the test and retrieving results using testPassingDto:" + id);
+        if (bindingResult.hasErrors()) {
+            return "validationerror";
+        }
+        List<List<Long>> studentAnswers = new ArrayList<>();
+        List<Long> answers1 = new ArrayList<>();
+        Random rand = new Random();
+        int low = 1;
+        int high = 4;
+        for (int i = 0; i < 2; i++)
+        {
+            long result = rand.nextInt(high - low);
+            answers1.add(result);
+        }
+        List<Long> answers2 = new ArrayList<>();
+        List<Long> answers3 = new ArrayList<>();
+        for (int i = 0; i < 1; i++)
+        {
+            long result1 = rand.nextInt(high - low);
+            answers2.add(result1);
+            long result2 = rand.nextInt(high - low);
+            answers3.add(result2);
+        }
+        studentAnswers.add(answers1);
+        studentAnswers.add(answers2);
+        studentAnswers.add(answers3);
+        TestPassingDto testPassingDto = new TestPassingDto();
+        model.addAttribute("id1", id);
+        testPassingDto.setTestId(id);
+        testPassingDto.setAnswerIds(studentAnswers);
+        userService.testPassing(testPassingDto);
+        return "usertestpassingpage";
+
     }
 }

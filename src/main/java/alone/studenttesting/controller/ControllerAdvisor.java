@@ -60,11 +60,6 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
-    @ExceptionHandler(TokenValidationException.class)
-    public ResponseEntity<String> handleTokenValidationException(TokenValidationException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(UserIsBlockedException.class)
     public ResponseEntity<String> handleUserIsBlockedException(UserIsBlockedException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);

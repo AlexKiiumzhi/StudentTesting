@@ -6,44 +6,43 @@ import java.util.List;
 
 public class UserEditDto {
 
-    @NotNull(message = "user id must not be null")
-    @Min(value=1, message="must be equal or greater than 1")
-    @Max(value=50, message="must be equal or less than 50")
-    private Long id;
-    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
-    @NotEmpty(message = "english first name must not be empty")
+    @NotNull
+    @Min(value=1)
+    private Long userId;
+    @Pattern(regexp="[A-Z0-9a-z]{3,100}")
+    @NotEmpty
     private String enFirstName;
-    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
-    @NotEmpty(message = "ukrainian first name must not be empty")
+    @Pattern(regexp="[А-ЩЬЮЯҐЄІЇ0-9а-щьюяґєії]{3,100}")
+    @NotEmpty
     private String uaFirstName;
-    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
-    @NotEmpty(message = "english last name must not be empty")
+    @Pattern(regexp="[A-Z0-9a-z]{3,100}")
+    @NotEmpty
     private String enLastName;
-    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
-    @NotEmpty(message = "ukrainian last name must not be empty")
+    @Pattern(regexp="[А-ЩЬЮЯҐЄІЇ0-9а-щьюяґєії]{3,100}")
+    @NotEmpty
     private String UaLastName;
-    @NotBlank(message = "Email field blank!")
+    @NotBlank
     @Email
     private String email;
-    /*@Pattern(regexp="^\\\\+?3?8?(0(67|68|95|96|97|98)\\\\d{7})$",message="number must be a format of +XX0XXXXXXXXX")
-    @NotEmpty(message = "ukrainian last name must not be empty")*/
+    @Pattern(regexp="[0-9]{10,20}")
+    @NotEmpty
     private String phone;
-    /*@NotNull(message = "Password field null!")
-    @NotBlank(message = "Password field blank!")
-    @Size(min = 8, max = 30, message = "Password field not in size 8 - 30.")*/
+    @NotNull
+    @NotBlank
+    @Pattern(regexp="[A-Z0-9a-z]{8,30}")
+    @Size(min = 8)
     private String password;
-    @NotNull(message = "age must not be null")
-    @Min(value=5, message="must be equal or greater than 1")
-    @Max(value=70, message="must be equal or less than 50")
+    @NotNull
+    @Min(value=12)
     private Long age;
     private List<Long> testIds = new ArrayList<>();
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long id) {
+        this.userId = id;
     }
 
     public String getEnFirstName() {

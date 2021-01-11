@@ -1,13 +1,12 @@
 package alone.studenttesting.service.dto;
 
-import javax.persistence.Column;
 import javax.validation.constraints.*;
 
+public class AnswerEditDto {
 
-public class AnswerCreationDto {
     @NotNull
     @Min(value=1)
-    private Long questionId;
+    private Long answerId;
     @Pattern(regexp="[A-Z0-9a-z]{3,100}")
     @NotEmpty
     private String enAnswer;
@@ -17,12 +16,12 @@ public class AnswerCreationDto {
     @NotNull
     private Boolean correctnessState;
 
-    public Long getQuestionId() {
-        return questionId;
+    public Long getAnswerId() {
+        return answerId;
     }
 
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
+    public void setAnswerId(Long answerId) {
+        this.answerId = answerId;
     }
 
     public String getEnAnswer() {

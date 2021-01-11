@@ -7,12 +7,12 @@ import javax.validation.constraints.Size;
 
 public class LoginDto {
 
-    @NotBlank(message = "Email field blank!")
+    @NotBlank
     @Email
     public String email;
-    @NotNull(message = "Password field null!")
-    @NotBlank(message = "Password field blank!")
-    @Size(min = 8, max = 30, message = "Password field not in size 8 - 30.")
+    @NotNull
+    @NotBlank
+    @Size(min = 8)
     public String password;
 
     public String getEmail() {

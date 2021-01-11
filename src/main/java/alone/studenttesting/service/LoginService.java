@@ -1,7 +1,7 @@
 package alone.studenttesting.service;
 
-import alone.studenttesting.security.JwtTokenResponse;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface LoginService {
-    JwtTokenResponse generateJwtToken(String email, String password);
+    UserDetails loadUserByUsername(String email);
 }

@@ -1,35 +1,24 @@
 package alone.studenttesting.service.dto;
 
-import javax.validation.constraints.*;
+public class UserInfoDto {
 
-public class RegistrationDto {
-
-    @Pattern(regexp="[A-Z0-9a-z]{3,100}")
-    @NotEmpty
+    private Long userId;
     private String enFirstName;
-    @Pattern(regexp="[А-ЩЬЮЯҐЄІЇ0-9а-щьюяґєії]{3,100}")
-    @NotEmpty
     private String uaFirstName;
-    @Pattern(regexp="[A-Z0-9a-z]{3,100}")
-    @NotEmpty
     private String enLastName;
-    @Pattern(regexp="[А-ЩЬЮЯҐЄІЇ0-9а-щьюяґєії]{3,100}")
-    @NotEmpty
-    private String uaLastName;
-    @NotBlank
-    @Email
+    private String UaLastName;
     private String email;
-    @Pattern(regexp="[0-9]{10,20}")
-    @NotEmpty
     private String phone;
-    @NotNull
-    @NotBlank
-    @Pattern(regexp="[A-Z0-9a-z]{8,30}")
-    @Size(min = 8)
     private String password;
-    @NotNull
-    @Min(value=12)
     private Long age;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getEnFirstName() {
         return enFirstName;
@@ -56,11 +45,11 @@ public class RegistrationDto {
     }
 
     public String getUaLastName() {
-        return uaLastName;
+        return UaLastName;
     }
 
     public void setUaLastName(String uaLastName) {
-        this.uaLastName = uaLastName;
+        UaLastName = uaLastName;
     }
 
     public String getEmail() {

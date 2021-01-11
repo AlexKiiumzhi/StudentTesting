@@ -13,10 +13,10 @@ public class Subject implements IEntity{
     private Long id;
 
     @Column(name = "name_en", nullable = false)
-    private String enFirstName;
+    private String enName;
 
     @Column(name = "name_ua", nullable = false)
-    private String uaFirstName;
+    private String uaName;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name="subject_id")
@@ -29,20 +29,20 @@ public class Subject implements IEntity{
 
     public void setId(Long id) { this.id = id; }
 
-    public String getEnFirstName() {
-        return enFirstName;
+    public String getEnName() {
+        return enName;
     }
 
-    public void setEnFirstName(String enFirstName) {
-        this.enFirstName = enFirstName;
+    public void setEnName(String enName) {
+        this.enName = enName;
     }
 
-    public String getUaFirstName() {
-        return uaFirstName;
+    public String getUaName() {
+        return uaName;
     }
 
-    public void setUaFirstName(String uaFirstName) {
-        this.uaFirstName = uaFirstName;
+    public void setUaName(String uaFirstName) {
+        this.uaName = uaFirstName;
     }
 
     public List<Test> getTests() { return tests; }

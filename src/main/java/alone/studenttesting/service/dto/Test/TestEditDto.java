@@ -8,26 +8,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class TestEditDto {
-    @NotNull(message = "test id must not be null")
-    @Min(value=1, message="must be equal or greater than 1")
-    @Max(value=50, message="must be equal or less than 50")
+    @NotNull
+    @Min(value=1)
     private Long testId;
-    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
-    @NotEmpty(message = "english test name must not be empty")
+    @Pattern(regexp="[A-Z0-9a-z]{3,100}")
+    @NotEmpty
     private String enName;
-    @Pattern(regexp="[A-Z0-9a-z]{3,20}",message="length must be from 3 to 20")
-    @NotEmpty(message = "ukrainian test name must not be empty")
+    @Pattern(regexp="[А-ЩЬЮЯҐЄІЇ0-9а-щьюяґєії]{3,100}")
+    @NotEmpty
     private String uaName;
-    @NotNull(message = "difficulty scale must not be null")
-    @Min(value=1, message="must be equal or greater than 1")
-    @Max(value=10, message="must be equal or less than 10")
+    @NotNull
+    @Min(value=1)
+    @Max(value=10)
     private Long difficulty;
-    @NotNull(message = "question amount must not be null")
-    @Min(value=1, message="must be equal or greater than 1")
-    @Max(value=20, message="must be equal or less than 20")
+    @NotNull
     private Integer questionAmount;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDateTime testDate;
+    private String testDate;
 
     public Long getTestId() {
         return testId;
@@ -69,11 +66,11 @@ public class TestEditDto {
         this.questionAmount = questionAmount;
     }
 
-    public LocalDateTime getTestDate() {
+    public String  getTestDate() {
         return testDate;
     }
 
-    public void setTestDate(LocalDateTime testDate) {
+    public void setTestDate(String  testDate) {
         this.testDate = testDate;
     }
 

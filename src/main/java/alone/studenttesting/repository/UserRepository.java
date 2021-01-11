@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,4 +18,8 @@ public interface UserRepository extends JpaRepository <User, Long> {
     @Modifying
     @Query(value = "update user_test set mark =:mark where user_id =:userId AND test_id =:testId", nativeQuery = true)
     void setMark (int mark ,Long userId, Long testId);
+
+    @Transactional
+    @Query(value = "SELECT mark FROM user_test WHERE user_id =:userId AND test_id =:testId", nativeQuery = true)
+    Integer getTestMarks (Long userId, Long testId);
 }

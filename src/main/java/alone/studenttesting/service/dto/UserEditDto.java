@@ -9,16 +9,16 @@ public class UserEditDto {
     @NotNull
     @Min(value=1)
     private Long userId;
-    @Pattern(regexp="[A-Z0-9a-z]{3,100}")
+    @Pattern(regexp="[A-Za-z]{3,100}")
     @NotEmpty
     private String enFirstName;
-    @Pattern(regexp="[А-ЩЬЮЯҐЄІЇ0-9а-щьюяґєії]{3,100}")
+    @Pattern(regexp="[А-ЩЬЮЯҐЄІЇа-щьюяґєії]{3,100}")
     @NotEmpty
     private String uaFirstName;
-    @Pattern(regexp="[A-Z0-9a-z]{3,100}")
+    @Pattern(regexp="[A-Za-z]{3,100}")
     @NotEmpty
     private String enLastName;
-    @Pattern(regexp="[А-ЩЬЮЯҐЄІЇ0-9а-щьюяґєії]{3,100}")
+    @Pattern(regexp="[А-ЩЬЮЯҐЄІЇа-щьюяґєії]{3,100}")
     @NotEmpty
     private String UaLastName;
     @NotBlank

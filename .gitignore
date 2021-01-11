@@ -23,7 +23,8 @@ out/
 *.tar.gz
 *.rar
 
-
-
+.mvnw
+.mvn
+mvn/
 
 

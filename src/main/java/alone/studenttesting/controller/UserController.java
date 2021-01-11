@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
@@ -33,6 +31,9 @@ public class UserController {
     public static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     UserService userService;
+
+    @Autowired
+    ParameterValidator parameterValidator;
 
     @GetMapping("/home")
     public String home(Model model) {
@@ -85,11 +86,13 @@ public class UserController {
     }
 
     @PostMapping("/testPassingPage/select")
-    public String testSelection(@RequestParam(value = "id", required = false) @NotNull @Min(value=1) Long id, Model model, BindingResult bindingResult) {
+    public String testSelection(@RequestParam(value = "id", required = false)Long id, Model model) {
         log.info("Selecting a test and saving it in user, test:" + id);
-        if (bindingResult.hasErrors()) {
-            return "validationerror";
+        if(!parameterValidator.validateNullNumber(id)) {
+            model.addAttribute("enErrorMessage", ResourceBundle.getBundle("outputs", Locale.getDefault()).getString("Id.validation_error"));
+            return "idvalidationerror";
         }
+
         List<Question> questions = userService.testSelection(id);
         model.addAttribute("id", id);
         model.addAttribute("questions", questions);
@@ -97,11 +100,9 @@ public class UserController {
     }
 
     @PostMapping("/testPassingPage/pass")
-    public String testPassing(@RequestParam(value = "id1", required = false) @NotNull @Min(value=1) Long id, Model model, BindingResult bindingResult) {
+    public String testPassing(@RequestParam(value = "id1", required = false) @NotNull @Min(value=1) Long id, Model model) {
         log.info("Passing the test and retrieving results using testPassingDto:" + id);
-        if (bindingResult.hasErrors()) {
-            return "validationerror";
-        }
+
         List<List<Long>> studentAnswers = new ArrayList<>();
         List<Long> answers1 = new ArrayList<>();
         Random rand = new Random();
@@ -124,6 +125,12 @@ public class UserController {
         studentAnswers.add(answers1);
         studentAnswers.add(answers2);
         studentAnswers.add(answers3);
+
+        if(!parameterValidator.validateNullNumber(id)) {
+            model.addAttribute("enErrorMessage", ResourceBundle.getBundle("outputs", Locale.getDefault()).getString("Id.validation_error"));
+            return "idvalidationerror";
+        }
+
         TestPassingDto testPassingDto = new TestPassingDto();
         model.addAttribute("id1", id);
         testPassingDto.setTestId(id);

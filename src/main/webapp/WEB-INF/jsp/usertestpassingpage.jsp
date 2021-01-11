@@ -19,7 +19,7 @@
 
 <form class="w3-center" action="${pageContext.request.contextPath}/user/testPassingPage/select" method="post">
     <label for="id"><fmt:message key="user.choose_tests"/></label><br>
-    <input type="text" id="id" name="id" placeholder="test id number"><br><br>
+    <input type="number" min="1" id="id" name="id" placeholder="id number"><br><br>
     <input type="submit" value=<fmt:message key="submit.button"/>>
 </form>
 
@@ -29,7 +29,7 @@
 
 <form class="w3-center" action="${pageContext.request.contextPath}/user/testPassingPage/pass" method="post">
     <label for="id1"><fmt:message key="user.pass_tests"/></label><br>
-    <input type="text" id="id1" name="id1" placeholder="test id number"><br><br>
+    <input type="number" min="1" id="id1" name="id1" placeholder="id number"><br><br>
     <input type="submit" value=<fmt:message key="submit.button"/>>
 </form>
 

@@ -49,8 +49,6 @@ public class LoginController {
 
     @RequestMapping(value = "/login/failure")
     public String loginFailure() {
-        /*String message = "Login Failure!";
-        return "redirect:/login?message="+message;*/
         return "tests";
     }
 

@@ -14,7 +14,7 @@
         </div>
         <form class="w3-center" action="${pageContext.request.contextPath}/admin/blockuser" method="post">
         <label for="id"><fmt:message key="User.block"/></label><br>
-        <input type="text" id="id" name="id" placeholder="id number"><br><br>
+        <input type="number" min="1" id="id" name="id" placeholder="id number"><br><br>
             <input type="submit" value=<fmt:message key="Block.button"/>>
         </form>
         <div align="center">
@@ -22,7 +22,7 @@
         </div>
         <form class="w3-center" action="${pageContext.request.contextPath}/admin/unblockuser" method="post">
             <label for="id1"><fmt:message key="User.unblock"/></label><br>
-            <input type="text" id="id1" name="id1" placeholder="id number"><br><br>
+            <input type="number" min="1" id="id1" name="id1" placeholder="id number"><br><br>
             <input type="submit" value=<fmt:message key="Unblock.button"/>>
         </form>
 
@@ -31,7 +31,7 @@
         </div>
         <form class="w3-center" action="${pageContext.request.contextPath}/admin/user/edit" method="post">
             <label for="userId"><fmt:message key="user.id"/></label><br>
-            <input type="number" id="userId" name="userId" placeholder="id number"><br><br>
+            <input type="number" min="1" id="userId" name="userId" placeholder="id number"><br><br>
             <label for="enFirstName"><fmt:message key="user.first_name.en"/></label><br>
             <input type="text" id="enFirstName" name="enFirstName"><br><br>
             <label for="uaFirstName"><fmt:message key="user.first_name.ua"/></label><br>
@@ -45,7 +45,7 @@
             <label for="password"><fmt:message key="user.password"/></label><br>
             <input type="password" id="password" name="password" ><br><br>
             <label for="age"><fmt:message key="user.age"/></label><br>
-            <input type="number" id="age" name="age" placeholder="age number"><br><br>
+            <input type="number" min="1" max="100" id="age" name="age" placeholder="age number"><br><br>
             <label for="phone"><fmt:message key="user.phone"/></label><br>
             <input type="text" id="phone" name="phone" placeholder="00380XXXXXXXXX"><br><br>
             <select name="testIds" multiple="multiple">

@@ -3,6 +3,7 @@ package alone.studenttesting.controller;
 import alone.studenttesting.entity.Answer;
 import alone.studenttesting.entity.Subject;
 import alone.studenttesting.entity.Test;
+import alone.studenttesting.exception.AnswerAlreadyExistsException;
 import alone.studenttesting.service.AdminService;
 import alone.studenttesting.service.UserService;
 import alone.studenttesting.service.dto.*;
@@ -16,12 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -35,6 +40,9 @@ public class AdminController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ParameterValidator parameterValidator;
+
     @GetMapping("/home")
     public String home(Model model) {
         List<Test> tests = adminService.getAllTests();
@@ -43,10 +51,11 @@ public class AdminController {
     }
 
     @PostMapping("/blockuser")
-    public String blockUser(@RequestParam(value = "id", required = false) @NotNull @Min(value=1) Long id, Model model, BindingResult bindingResult) {
+    public String blockUser(@RequestParam(value = "id", required = false) Long id, Model model) {
         log.info("Block a user by his id, id:" + id);
-        if (bindingResult.hasErrors()) {
-            return "validationerror";
+        if(!parameterValidator.validateNullNumber(id)) {
+            model.addAttribute("enErrorMessage", ResourceBundle.getBundle("outputs", Locale.getDefault()).getString("Id.validation_error"));
+            return "idvalidationerror";
         }
         adminService.blockUser(id);
         model.addAttribute("id", id);
@@ -54,12 +63,13 @@ public class AdminController {
     }
 
     @PostMapping("/unblockuser")
-    public String unblockUser(@RequestParam(value = "id1", required = false) @NotNull @Min(value=1) Long id, Model model, BindingResult bindingResult) {
+    public String unblockUser(@RequestParam(value = "id1", required = false) Long id, Model model) {
         log.info("Block a user by his id, id:" + id);
-        if (bindingResult.hasErrors()) {
-            return "validationerror";
-        }
         adminService.unBlockUser(id);
+        if(!parameterValidator.validateNullNumber(id)) {
+            model.addAttribute("enErrorMessage", ResourceBundle.getBundle("outputs", Locale.getDefault()).getString("Id.validation_error"));
+            return "idvalidationerror";
+        }
         model.addAttribute("id1", id);
         return "adminhome";
     }
@@ -134,10 +144,13 @@ public class AdminController {
     }
 
     @PostMapping("/test/delete")
-    public String deleteTest(@RequestParam(value = "id", required = false) @NotNull @Min(value=1) Long id, Model model, BindingResult bindingResult) {
+    public String deleteTest(@RequestParam(value = "id", required = false) Long id, Model model) {
         log.info("Delete a test using its id, id:" + id);
-        if (bindingResult.hasErrors()) {
-            return "validationerror";
+        Locale uklocale = new Locale("uk", "UA");
+
+        if(!parameterValidator.validateNullNumber(id)) {
+            model.addAttribute("enErrorMessage", ResourceBundle.getBundle("outputs", Locale.getDefault()).getString("Id.validation_error"));
+            return "idvalidationerror";
         }
         adminService.deleteTest(id);
         model.addAttribute("id", id);

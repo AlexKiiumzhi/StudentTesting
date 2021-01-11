@@ -65,12 +65,12 @@
         <select name="sortBy">
             <c:choose>
                 <c:when test="${localeCode == 'uk'}">
-                    <option value="uaName" selected><c:out value="назва"/></option>
-                    <option value="difficulty" selected><c:out value="Складність"/></option>
-                    <option value="questionAmount" selected><c:out value="Кількість Питань"/></option>
+                    <option value="uaName" selected><fmt:message key="test.ua_name"/></option>
+                    <option value="difficulty" selected><fmt:message key="test.difficulty"/></option>
+                    <option value="questionAmount" selected><fmt:message key="test.question_amount"/></option>
                 </c:when>
                 <c:otherwise>
-                    <option value="enName" selected><c:out value="name"/></option>
+                    <option value="enName" selected><fmt:message key="test.en_name"/></option>
                     <option value="difficulty" selected><c:out value="Difficulty"/></option>
                     <option value="questionAmount" selected><c:out value="Question Amount"/></option>
                 </c:otherwise>

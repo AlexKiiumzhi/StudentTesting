@@ -23,20 +23,11 @@
             <label for="password"><fmt:message key="registration.password"/></label><br>
             <input type="password" id="password" name="password"><br><br>
             <label for="age"><fmt:message key="registration.age"/></label><br>
-            <input type="number" min="18" max="100" id="age" name="age"><br><br>
+            <input type="number" min="12" max="100" id="age" name="age"><br><br>
             <label for="phone"><fmt:message key="registration.phone"/></label><br>
             <input type="text" id="phone" name="phone" placeholder="00380XXXXXXXXX"><br><br>
             <input type="submit" value=<fmt:message key="registration.button"/>>
         </form>
-        <c:if test="${not empty enErrorMessage}">
-            <c:choose>
-                <c:when test="${localeCode == 'uk'}">
-                    <c:out value="${ukErrorMessage}"/>
-                </c:when>
-                <c:otherwise>
-                    <c:out value="${enErrorMessage}"/>
-                </c:otherwise>
-            </c:choose>
-        </c:if>
+
     </body>
 </html>

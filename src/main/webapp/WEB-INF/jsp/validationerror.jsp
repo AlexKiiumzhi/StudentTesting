@@ -2,9 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html>
     <fmt:setBundle basename="outputs"/>
-    <head>
-        <title><fmt:message key="error.title"/></title>
-    </head>
     <body>
     <h1><fmt:message key="validation.error.message"/></h1>
     <div><fmt:message key="validation.field.empty.message"/></div>

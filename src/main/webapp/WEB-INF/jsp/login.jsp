@@ -16,15 +16,5 @@
         <input type="password" id="password" name="password"><br><br>
         <input type="submit" value="<fmt:message key="login.button"/>">
     </form>
-    <c:if test="${not empty error.message}">
-        <c:choose>
-            <c:when test="${localeCode == 'uk'}">
-                <c:out value="${error.message}"/>
-            </c:when>
-            <c:otherwise>
-                <c:out value="${error.message}"/>
-            </c:otherwise>
-        </c:choose>
-    </c:if>
     </body>
 </html>
